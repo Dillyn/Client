@@ -15,7 +15,7 @@ public class RegisterMember extends JFrame{
     private JButton cancelButton;
     private JPanel panelMain;
     private AppUtil util = new AppUtil();
-
+    Member member;
     private MemberServiceImpli memberServiceImpli = new MemberServiceImpli();
 
 
@@ -30,44 +30,36 @@ public class RegisterMember extends JFrame{
                 String lastName;
 
                 if ((util.isStringOnlyAlphabet(firstNameTextField.getText()) == true) && (util.isStringOnlyAlphabet(lastNameTextField.getText()) == true)) {
-                    firstName = firstNameTextField.getText().toUpperCase();
-                    lastName = lastNameTextField.getText().toUpperCase();
+                    firstName = firstNameTextField.getText();
+                    lastName = lastNameTextField.getText();
 
 
-                    Member member = memberServiceImpli.save((new Member(null, firstName, lastName))); // saving member
-
+                     member = memberServiceImpli.save((new Member(null, firstName, lastName))); // saving member
+                }
                     if (member != null) {
                         JOptionPane.showMessageDialog(null, util.getRecordsAdded(), "SUCCESS", JOptionPane.INFORMATION_MESSAGE); //add
-                    } else
+                    } else if((util.isStringOnlyAlphabet(firstNameTextField.getText()) == false) || (util.isStringOnlyAlphabet(lastNameTextField.getText()) == false)){
                         JOptionPane.showMessageDialog(null, util.getRecordsFilled() + "\nFirstname and Lastname must contain alphabet characters only", "INFO", JOptionPane.INFORMATION_MESSAGE);
                     } else
-                        JOptionPane.showMessageDialog(null, util.getRecordsNotAdded() + "\nMember code already exist", "ERROR", JOptionPane.ERROR_MESSAGE); //not added
+                        JOptionPane.showMessageDialog(null, util.getRecordsNotAdded() + "\nMember was not added", "ERROR", JOptionPane.ERROR_MESSAGE); //not added
                  //
             }
         });
     }
 
     public static void main(String[] args) {
-       /* EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    MainMenu frame = new MainMenu();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });*/
+
         RegisterMember registerMember = new RegisterMember();
         registerMember.intialize();
     }
 
     public void intialize(){
-        JFrame frame = new JFrame(("RegisterMember"));
-        frame.setContentPane(new RegisterMember().panelMain);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+        setContentPane(new RegisterMember().panelMain);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
+        setVisible(true);
+       setLocationRelativeTo(null);
+        setBounds(100, 100, 480, 190);
     }
 
    /* public Object createMember(){

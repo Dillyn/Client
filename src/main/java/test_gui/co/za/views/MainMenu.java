@@ -71,6 +71,8 @@ public class MainMenu extends JFrame{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        setLocationRelativeTo(null);
+        setBounds(100, 100, 290, 400);
 
     }
 }

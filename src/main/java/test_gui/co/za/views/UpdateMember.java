@@ -2,17 +2,15 @@ package test_gui.co.za.views;
 
 import test_gui.co.za.domain.members.Member;
 import test_gui.co.za.services.impli.MemberServiceImpli;
+import test_gui.co.za.util.AppUtil;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class UpdateMember {
     private JPanel panelMain;
-    private JTextField idTextfield;
+    private JTextField idTextField;
     private JTextField firstNameTextfield;
     private JTextField lastNameTextField;
     private JButton updateButton;
@@ -20,9 +18,63 @@ public class UpdateMember {
     JTable table;
     private JLabel lblHead;
     JFrame frame = new JFrame(("UpdateMember"));
-    private MemberServiceImpli service = new MemberServiceImpli();
+    MemberServiceImpli service = new MemberServiceImpli();
+    AppUtil util = new AppUtil();
+    Integer id;
+
     Member member;
 
+
+    public UpdateMember() {
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String firstName;
+                String lastName;
+
+                if ((util.isStringOnlyAlphabet(firstNameTextfield.getText()) == true) && (util.isStringOnlyAlphabet(lastNameTextField.getText()) == true && !idTextField.getText().equals(""))) {
+                    firstName = firstNameTextfield.getText().toUpperCase();
+                    lastName = lastNameTextField.getText().toUpperCase();
+
+                    try {
+                        id = Integer.parseInt(idTextField.getText());
+                    } catch (NumberFormatException nfe) {
+                        JOptionPane.showMessageDialog(null, "Please Enter a valid ID NUMBER. NUMBERS ONLY");
+                        idTextField.setText("");
+                    }
+
+                    member = service.findById(id);
+                    if (member == null) {
+                        JOptionPane.showMessageDialog(null, "Member does not exist");
+                        idTextField.setText("");
+                        firstNameTextfield.setText("");
+                        lastNameTextField.setText("");
+
+                    } else if (member != null) {
+                        int n = JOptionPane.showConfirmDialog(
+                                null, "Would you like to update this member" + "\n" + member.toString(), "Are you sure?",
+                                JOptionPane.YES_NO_OPTION);
+                        if (n == JOptionPane.YES_OPTION) {
+                            Member member = service.update((new Member(id, firstName, lastName))); // saving member
+                            idTextField.setText("");
+                            firstNameTextfield.setText("");
+                            lastNameTextField.setText("");
+                            JOptionPane.showMessageDialog(null, util.getRecordsUpdated(), "SUCCESS", JOptionPane.INFORMATION_MESSAGE); //update
+                        } else if (n == JOptionPane.NO_OPTION) {
+                            idTextField.setText("");
+                            firstNameTextfield.setText("");
+                            lastNameTextField.setText("");
+                        }
+
+                    } else if ((util.isStringOnlyAlphabet(firstNameTextfield.getText()) == false) || (util.isStringOnlyAlphabet(lastNameTextField.getText()) == false))
+                        JOptionPane.showMessageDialog(null, util.getRecordsFilled() + "\nFirstname and Lastname must contain alphabet characters only" +
+                                "\nPlease Enter a valid ID NUMBER - refer to VIEW ALL MEMBERs FORM", "INFO", JOptionPane.INFORMATION_MESSAGE);
+                } else
+                    JOptionPane.showMessageDialog(null, util.getNoBlankFields() + "\nPLEASE ENTER VALID DETAILS" +"\nID MUST BE AN EXITING NUMBER"+"\nFIRSTNAME AND LASTNAME MUST CONTAIN ALPHABET ONLY", "ERROR", JOptionPane.ERROR_MESSAGE); //not added
+                //
+            }
+        });
+    }
 
     public static void main(String[] args) {
        /* EventQueue.invokeLater(new Runnable() {
@@ -37,8 +89,7 @@ public class UpdateMember {
         });*/
         UpdateMember updateMember = new UpdateMember();
         updateMember.intialize();
-        updateMember.validID();
-        updateMember.setText();
+
 
         //firstNameTextfield.setText(member.getFirstName());
         // lastNameTextField.setText(member.getLastName());
@@ -47,86 +98,15 @@ public class UpdateMember {
 
 
     public void intialize() {
-
+        frame.setVisible(true);
         frame.setContentPane(new UpdateMember().panelMain);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setBounds(100, 100, 390, 210);
 
 
     }
 
-    public void setText() {
-        String cheese = "cheese";
-
-    }
-
-    /*public JTable populatTable() {
-        String[] columnNames = {"id",
-                "firstName",
-                "lastName"};
-
-
-        List<String[]> rows = new ArrayList<String[]>();
-        List<Member> members = service.findAll();
-        for (Member s : members) {
-            rows.add(new String[]{"" + s.getId(), s.getFirstName(), s.getLastName()});
-        }
-        TableModel tableModel = new DefaultTableModel(rows.toArray(new Object[][]{}), columnNames);
-        JTable table1 = new JTable(tableModel);
-        frame.setLayout(new BorderLayout());
-        frame.add(new JScrollPane(table1), BorderLayout.CENTER);
-
-        frame.add(table1.getTableHeader(), BorderLayout.NORTH);
-
-        frame.setVisible(true);
-        frame.setSize(200, 200);
-
-        return table1;
-    }
-
-    public JTable createTable() {
-        return table = populatTable();
-    }*/
-
-
-    public void validID() {
-        Member member;
-        Integer id = 0;
-
-
-        do {
-
-            try {
-                id = Integer.parseInt(JOptionPane.showInputDialog("please enter VALID Member ID"));
-            } catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(null, "Please Enter a valid ID NUMBER");
-
-            }
-            if (id == JOptionPane.CANCEL_OPTION) {
-                MainMenu mainMenu = new MainMenu();
-                member = new Member(0, "asdf", "asfd");
-                mainMenu.setVisible(true);
-            } else {
-                member = service.findById(id);
-                lastNameTextField.setText(member.getLastName());
-
-                frame.setVisible(true);
-                lastNameTextField.setText(member.getLastName());
-            }
-        }
-
-        while (member == null);
-        {
-
-        }
-
-    }
-
-    public void load(Member member){
-        idTextfield.setText(member.getId().toString());
-        firstNameTextfield.setText(member.getFirstName());
-        lastNameTextField.setText(member.getLastName());
-
-    }
 }
 

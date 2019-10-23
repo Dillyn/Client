@@ -7,7 +7,7 @@ public class AppUtil {
     private final String recordsUpdated = "RECORD SUCCESSFULLY UPDATED";
     private final String recordsNotUpdated = "RECORD NOT UPDATED";
     private final String recordsAdded = "RECORD SUCCESSFULLY ADDED";
-    private final String recordsNotAdded = "SORRY! RECORD NOT BE ADDED";
+    private final String recordsNotAdded = "SORRY! RECORD COULD NOT BE ADDED";
     private final String recordsFilled = "PLEASE FILL IN ALL FIELDS";
     private final String noRowSelected = "NO ROW SELECTED";
     private final String noBlankFields = "NO BLANK FIELDS ALLOWED";

@@ -37,7 +37,7 @@ public class DeleteMember extends JFrame {
                     try {
                         id = Integer.parseInt(idTextField.getText());
                     } catch (NumberFormatException nfe) {
-                        JOptionPane.showMessageDialog(null, "Please Enter a valid ID NUMBER - refer to VIEW ALL MEMBERs FORM");
+                        JOptionPane.showMessageDialog(null, "Please Enter a valid ID NUMBER - refer to VIEW ALL MEMBERS FORM");
                         idTextField.setText("");
                     }
 
